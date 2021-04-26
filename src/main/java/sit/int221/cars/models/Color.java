@@ -1,5 +1,7 @@
 package sit.int221.cars.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ public class Color {
   private long colorid;
   private String colorname;
   private String colorcode;
+  @JsonBackReference
   @ManyToMany(mappedBy = "colorList", fetch = FetchType.LAZY)
   private List<Product> productList;
 
@@ -42,4 +45,7 @@ public class Color {
     this.colorcode = colorcode;
   }
 
+  public List<Product> getProductList() { return productList; }
+
+  public void setProductList(List<Product> productList) { this.productList = productList; }
 }

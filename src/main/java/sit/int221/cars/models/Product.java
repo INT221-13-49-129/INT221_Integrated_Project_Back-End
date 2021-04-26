@@ -103,4 +103,8 @@ public class Product {
   public Brand getBrand() { return brand; }
 
   public void setBrand(Brand brand) { this.brand = brand; }
+
+  public List<Color> getColorList() { return colorList; }
+
+  public void setColorList(List<Color> colorList) { this.colorList = colorList; }
 }
