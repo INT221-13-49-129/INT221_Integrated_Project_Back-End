@@ -1,5 +1,7 @@
 package sit.int221.cars.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -11,7 +13,8 @@ public class Brand {
   @Id
   private long brandid;
   private String brandname;
-  @OneToMany(fetch = FetchType.LAZY)
+  @JsonBackReference
+  @OneToMany(mappedBy = "brand",fetch = FetchType.LAZY)
   private List<Product> productList;
 
 

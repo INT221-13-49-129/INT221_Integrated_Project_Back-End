@@ -1,5 +1,7 @@
 package sit.int221.cars.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,9 +16,11 @@ public class Product {
   private String transmission;
   private java.sql.Date yom;
   private String description;
+  @JsonManagedReference
   @ManyToOne
   private Brand brand;
   @ManyToMany
+  @JsonManagedReference
   @JoinTable(
           name = "productcolor",
           joinColumns = @JoinColumn(name = "productid"),

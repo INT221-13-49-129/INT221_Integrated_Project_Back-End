@@ -12,7 +12,7 @@ public class Color {
   private long colorid;
   private String colorname;
   private String colorcode;
-  @ManyToMany(mappedBy = "productcolor", fetch = FetchType.LAZY)
+  @ManyToMany(mappedBy = "colorList", fetch = FetchType.LAZY)
   private List<Product> productList;
 
 
