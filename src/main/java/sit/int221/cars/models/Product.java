@@ -16,11 +16,9 @@ public class Product {
   private String transmission;
   private java.sql.Date yom;
   private String description;
-  @JsonManagedReference
   @ManyToOne
   private Brand brand;
   @ManyToMany
-  @JsonManagedReference
   @JoinTable(
           name = "productcolor",
           joinColumns = @JoinColumn(name = "productid"),
