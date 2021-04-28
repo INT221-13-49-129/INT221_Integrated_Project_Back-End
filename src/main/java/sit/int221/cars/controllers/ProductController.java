@@ -13,6 +13,7 @@ import sit.int221.cars.repositories.ProductRepository;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -63,6 +64,11 @@ public class ProductController {
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
         }
         return prod;
+    }
+
+    @GetMapping("/count")
+    public long productCount() {
+        return productRepository.count();
     }
 
     @PostMapping("/add")
