@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class ExceptionResponse {
 
     public static enum ERROR_CODE {
-        ITEM_DOES_NOT_EXIST(1001), ITEM_ALREADY_EXIST(2001) ,ITEM_NAME_ALREADY_EXIST(2002);
+        ITEM_DOES_NOT_EXIST(1001), ITEM_ALREADY_EXIST(2001) ,ITEM_NAME_ALREADY_EXIST(2002),ITEM_INCOMPLETE_DELIVERY(3001),ITEM_INCOMPLETE_DELETION(3002);
         private int value;
 
         ERROR_CODE(int value) {

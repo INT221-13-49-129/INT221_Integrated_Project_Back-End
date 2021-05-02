@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -39,11 +40,20 @@ public class FileStorageService implements StorageService {
 
     @Override
     public String store(MultipartFile file) throws Exception {
-        return store(file, StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())));
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        int extPos = fileName.lastIndexOf(".");
+        if(extPos > 0){
+            fileName = file.getOriginalFilename().substring(0,extPos);
+        }
+        return store(file,fileName);
     }
 
     @Override
     public String store(MultipartFile file, String fileName) throws Exception {
+        int extPos = file.getOriginalFilename().lastIndexOf(".");
+        if(extPos > 0){
+            fileName += file.getOriginalFilename().substring(extPos).toLowerCase();
+        }
         try {
             if(file.isEmpty()){
                 throw new IOException("file : "+ fileName +" is Empty");
