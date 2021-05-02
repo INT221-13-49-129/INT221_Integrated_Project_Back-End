@@ -7,9 +7,7 @@ import sit.int221.cars.models.Product;
 import sit.int221.cars.repositories.BrandRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/brand")
 public class BrandController {

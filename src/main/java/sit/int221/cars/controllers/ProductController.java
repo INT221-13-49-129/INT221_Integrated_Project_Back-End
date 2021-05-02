@@ -13,7 +13,6 @@ import sit.int221.cars.repositories.ProductRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -86,7 +85,9 @@ public class ProductController {
         Product prod = productRepository.findById(id).orElse(null);
         if( prod == null){
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
-        }else {
+        }else if (productRepository.findByProductname(updateProduct.getProductname()) != null && prod.getProductid() != productRepository.findByProductname(updateProduct.getProductname()).getProductid()){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_NAME_ALREADY_EXIST,"name :product {"+updateProduct.getProductname()+"} does already exist !!");
+        }else{
             prod.setProductname(updateProduct.getProductname());
             prod.setPower(updateProduct.getPower());
             prod.setTorque(updateProduct.getTorque());
