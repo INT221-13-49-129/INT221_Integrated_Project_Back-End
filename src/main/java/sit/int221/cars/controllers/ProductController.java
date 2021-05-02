@@ -5,24 +5,35 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sit.int221.cars.exceptions.ExceptionResponse;
 import sit.int221.cars.exceptions.ProductException;
 import sit.int221.cars.models.Product;
 import sit.int221.cars.repositories.ProductRepository;
+import sit.int221.cars.services.StorageService;
 
+import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private StorageService storageService;
+
     @GetMapping("")
     public List<Product> product() {
         return productRepository.findAll();
+    }
+
+    @GetMapping("/maxid")
+    public int maxProductId() {
+        return productRepository.MaxProductId();
     }
 
     @GetMapping("/page")
@@ -81,12 +92,31 @@ public class ProductController {
         return productRepository.save(newProduct);
     }
 
+    @PostMapping(value = "/add/withimg",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Product createProImg(@RequestParam(value = "file",required = false) MultipartFile fileImg,@RequestPart Product newProduct) {
+        if(productRepository.findById(newProduct.getProductid()).orElse(null) != null){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_ALREADY_EXIST,"id :product {"+newProduct.getProductid()+"} does already exist !!");
+        }else if (productRepository.findByProductname(newProduct.getProductname()) != null){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_NAME_ALREADY_EXIST,"name :product {"+newProduct.getProductname()+"} does already exist !!");
+        }else if(fileImg == null){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+newProduct.getProductid()+"} no image !!");
+        }
+        try {
+            newProduct.setImg(storageService.store(fileImg, String.valueOf(newProduct.getProductid())));
+        } catch (Exception e) {
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+newProduct.getProductid()+"}"+ e.getMessage() +"!!");
+        }
+        return productRepository.save(newProduct);
+    }
+
     @PutMapping("/edit/{id}")
     public Product update(@RequestBody Product updateProduct,@PathVariable Long id) {
         Product prod = productRepository.findById(id).orElse(null);
         if( prod == null){
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
-        }else {
+        }else if (productRepository.findByProductname(updateProduct.getProductname()) != null && prod.getProductid() != productRepository.findByProductname(updateProduct.getProductname()).getProductid()){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_NAME_ALREADY_EXIST,"name :product {"+updateProduct.getProductname()+"} does already exist !!");
+        }else{
             prod.setProductname(updateProduct.getProductname());
             prod.setPower(updateProduct.getPower());
             prod.setTorque(updateProduct.getTorque());
@@ -99,11 +129,43 @@ public class ProductController {
         return productRepository.save(prod);
     }
 
+    @PutMapping(value = "/edit/{id}/withimg",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Product updateImg(@RequestParam(value = "file",required = false) MultipartFile fileImg,@RequestPart Product updateProduct,@PathVariable Long id) {
+        Product prod = productRepository.findById(id).orElse(null);
+        if( prod == null){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
+        }else if (productRepository.findByProductname(updateProduct.getProductname()) != null && prod.getProductid() != productRepository.findByProductname(updateProduct.getProductname()).getProductid()){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_NAME_ALREADY_EXIST,"name :product {"+updateProduct.getProductname()+"} does already exist !!");
+        }else if(fileImg == null){
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+updateProduct.getProductid()+"} no image !!");
+        }{
+            prod.setProductname(updateProduct.getProductname());
+            prod.setPower(updateProduct.getPower());
+            prod.setTorque(updateProduct.getTorque());
+            prod.setTransmission(updateProduct.getTransmission());
+            prod.setYom(updateProduct.getYom());
+            prod.setDescription(updateProduct.getDescription());
+            prod.setBrand(updateProduct.getBrand());
+            prod.setColorList(updateProduct.getColorList());
+            try {
+                prod.setImg(storageService.store(fileImg, String.valueOf(updateProduct.getProductid())));
+            } catch (Exception e) {
+                throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+updateProduct.getProductid()+"}"+ e.getMessage() +"!!");
+            }
+        }
+        return productRepository.save(prod);
+    }
+
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
         Product prod = productRepository.findById(id).orElse(null);
         if(prod == null){
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
+        }
+        try {
+            storageService.delete(prod.getImg());
+        } catch (IOException e) {
+            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELETION,"id :id {"+prod.getProductid()+"} "+ e.getMessage() +"!!");
         }
         productRepository.delete(prod);
     }

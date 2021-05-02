@@ -1,7 +1,5 @@
 package sit.int221.cars.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,6 +14,7 @@ public class Product {
   private String transmission;
   private java.sql.Date yom;
   private String description;
+  private String img;
   @ManyToOne
   private Brand brand;
   @ManyToMany
@@ -98,9 +97,15 @@ public class Product {
   }
 
 
+  public String getImg() { return img; }
+
+  public void setImg(String img) { this.img = img; }
+
+
   public Brand getBrand() { return brand; }
 
   public void setBrand(Brand brand) { this.brand = brand; }
+
 
   public List<Color> getColorList() { return colorList; }
 

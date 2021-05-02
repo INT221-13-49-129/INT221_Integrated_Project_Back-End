@@ -8,7 +8,6 @@ import sit.int221.cars.repositories.ColorRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/color")
 public class ColorController {

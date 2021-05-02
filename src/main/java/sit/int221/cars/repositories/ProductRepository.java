@@ -11,5 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     Page<Product> findAllByProductnameContainingOrDescriptionContaining(String searchData1,String searchData2,Pageable pageable);
     @Query("select p from Product p where p.brand.brandid = ?1")
     Page<Product> findAllByBrandID(Long brandId,Pageable pageable);
+    @Query("SELECT max(p.productid) FROM Product p")
+    int MaxProductId();
 
 }
