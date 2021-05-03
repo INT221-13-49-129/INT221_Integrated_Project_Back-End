@@ -32,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/maxid")
-    public int maxProductId() {
+    public long maxProductId() {
         return productRepository.MaxProductId();
     }
 
@@ -110,7 +110,7 @@ public class ProductController {
     }
 
     @PutMapping("/edit/{id}")
-    public Product update(@RequestBody Product updateProduct,@PathVariable Long id) {
+    public Product update(@RequestPart Product updateProduct,@PathVariable Long id) {
         Product prod = productRepository.findById(id).orElse(null);
         if( prod == null){
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
@@ -120,6 +120,7 @@ public class ProductController {
             prod.setProductname(updateProduct.getProductname());
             prod.setPower(updateProduct.getPower());
             prod.setTorque(updateProduct.getTorque());
+            prod.setWeight(updateProduct.getWeight());
             prod.setTransmission(updateProduct.getTransmission());
             prod.setYom(updateProduct.getYom());
             prod.setDescription(updateProduct.getDescription());
@@ -136,22 +137,25 @@ public class ProductController {
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"id :product {"+id+"} does not exist !!");
         }else if (productRepository.findByProductname(updateProduct.getProductname()) != null && prod.getProductid() != productRepository.findByProductname(updateProduct.getProductname()).getProductid()){
             throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_NAME_ALREADY_EXIST,"name :product {"+updateProduct.getProductname()+"} does already exist !!");
-        }else if(fileImg == null){
-            throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+updateProduct.getProductid()+"} no image !!");
-        }{
+        }else {
             prod.setProductname(updateProduct.getProductname());
             prod.setPower(updateProduct.getPower());
             prod.setTorque(updateProduct.getTorque());
+            prod.setWeight(updateProduct.getWeight());
             prod.setTransmission(updateProduct.getTransmission());
             prod.setYom(updateProduct.getYom());
             prod.setDescription(updateProduct.getDescription());
             prod.setBrand(updateProduct.getBrand());
             prod.setColorList(updateProduct.getColorList());
-            try {
-                prod.setImg(storageService.store(fileImg, String.valueOf(updateProduct.getProductid())));
-            } catch (Exception e) {
-                throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+updateProduct.getProductid()+"}"+ e.getMessage() +"!!");
+            if(fileImg != null){
+                try {
+                    storageService.delete(prod.getImg());
+                    prod.setImg(storageService.store(fileImg, String.valueOf(updateProduct.getProductid())));
+                } catch (Exception e) {
+                    throw new ProductException(ExceptionResponse.ERROR_CODE.ITEM_INCOMPLETE_DELIVERY,"id :id {"+updateProduct.getProductid()+"}"+ e.getMessage() +"!!");
+                }
             }
+
         }
         return productRepository.save(prod);
     }
