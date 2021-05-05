@@ -1,21 +1,24 @@
-version: "3"
+version: "3.8"
 services:
-  employee-jdbc:
-    image: employee-jdbc
-    ports:
-      - "8080:8080"
+  backend:
+    image: backend
     networks:
-      - employee-mysql
+      - allnetwork
     depends_on:
-      - hello_world
+      - carsdb
  
   mysqldb:
     image: mysql:8.0.23
     networks:
-      - employee-mysql
+      - allnetwork
     environment:
-      - MYSQL_ROOT_PASSWORD=Newnismo_2001
-      - MYSQL_DATABASE=bootdb  
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ~/backend_data:/public/product-img
 
 networks:
-  employee-mysql:
+  default:
+    external:
+      name: allnetwork
