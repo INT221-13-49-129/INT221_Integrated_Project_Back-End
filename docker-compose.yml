@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  backend:
+    image: backend
+    networks:
+      - allnetwork
+    depends_on:
+      - carsdb
+ 
+  mysqldb:
+    image: mysql:8.0.23
+    networks:
+      - allnetwork
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ~/backend_data:/public/product-img
+
+networks:
+  default:
+    external:
+      name: allnetwork
