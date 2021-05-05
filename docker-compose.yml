@@ -12,7 +12,8 @@ services:
     networks:
       - allnetwork
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=Newnismo_2001
+      - MYSQL_DATABASE=carsdb
     volumes:
       - ~/backend_data:/public/product-img
 
