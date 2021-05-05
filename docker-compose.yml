@@ -1,0 +1,21 @@
+version: "3"
+services:
+  employee-jdbc:
+    image: employee-jdbc
+    ports:
+      - "8080:8080"
+    networks:
+      - employee-mysql
+    depends_on:
+      - hello_world
+ 
+  mysqldb:
+    image: mysql:8.0.23
+    networks:
+      - employee-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=Newnismo_2001
+      - MYSQL_DATABASE=bootdb  
+
+networks:
+  employee-mysql:
