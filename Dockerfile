@@ -1,7 +1,7 @@
-From openjdk:11-alpine
+From openjdk:16-alpine
 
 EXPOSE 8080
 
-ADD out/artifacts/cars-0.0.1-SNAPSHOT.jar projectcars.jar
+ADD out/cars-0.0.1-SNAPSHOT.jar projectcars.jar
 
 ENTRYPOINT ["java","-jar","projectcars.jar"]
