@@ -30,6 +30,7 @@ public class FileStorageService implements StorageService {
     @PostConstruct
     public void init() {
         try {
+            System.out.println(Files.createDirectories(Path.of("aaa")).toAbsolutePath());
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,7 +80,7 @@ public class FileStorageService implements StorageService {
         Path path = this.rootLocation.resolve(fileName);
         File file = new File(String.valueOf(path.toString()));
         if(!file.isFile()){
-            throw new IOException("file : "+ fileName +" is does not exist!!" + path.toAbsolutePath());
+            throw new IOException("file : "+ fileName +" is does not exist!!");
         }
         return path;
     }
