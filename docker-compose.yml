@@ -14,6 +14,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=Newnismo_2001
       - MYSQL_DATABASE=carsdb
+      - MYSQL_USER=root
     volumes:
       - ~/backend_data:/public/product-img
 
