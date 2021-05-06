@@ -77,10 +77,9 @@ public class FileStorageService implements StorageService {
     @Override
     public Path load(String fileName) throws IOException {
         Path path = this.rootLocation.resolve(fileName);
-        System.out.println(path);
         File file = new File(String.valueOf(path.toString()));
         if(!file.isFile()){
-            throw new IOException("file : "+ fileName +" is does not exist!!");
+            throw new IOException("file : "+ fileName +" is does not exist!!" + path);
         }
         return path;
     }
