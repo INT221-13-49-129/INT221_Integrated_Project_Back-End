@@ -30,7 +30,6 @@ public class FileStorageService implements StorageService {
     @PostConstruct
     public void init() {
         try {
-            System.out.println(Files.createDirectories(Path.of("aaa")).toAbsolutePath());
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
             e.printStackTrace();
