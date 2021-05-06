@@ -6,6 +6,6 @@ COPY src /workspace/src
 RUN mvn -f pom.xml clean package
 
 FROM openjdk:11.0-slim
-COPY --from=build /workspace/target/app.jar app.jar
+COPY --from=build /workspace/target/*.jar app.jar
 EXPOSE 3000
 ENTRYPOINT ["java","-jar","app.jar"]
