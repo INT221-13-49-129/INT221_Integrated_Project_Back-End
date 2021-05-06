@@ -79,7 +79,7 @@ public class FileStorageService implements StorageService {
         Path path = this.rootLocation.resolve(fileName);
         File file = new File(String.valueOf(path.toString()));
         if(!file.isFile()){
-            throw new IOException("file : "+ fileName +" is does not exist!!" + path);
+            throw new IOException("file : "+ fileName +" is does not exist!!" + path.toAbsolutePath());
         }
         return path;
     }
