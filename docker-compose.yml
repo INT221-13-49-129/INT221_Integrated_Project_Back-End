@@ -3,6 +3,8 @@ services:
   backend:
     build: .
     image: backend
+    ports: 
+      - "3000:3000"
     environment:
       - MYSQL_ROOT_PASSWORD=Newnismo_2001
       - MYSQL_DATABASE=carsdb
