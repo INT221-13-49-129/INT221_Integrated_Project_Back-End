@@ -1,14 +1,8 @@
 version: "3"
 services:
   backend:
+    build: .
     image: backend
-    networks:
-      - allnetwork
-
-  database:
-    image: mysql:8.0.23
-    networks:
-      - allnetwork
     environment:
       - MYSQL_ROOT_PASSWORD=Newnismo_2001
       - MYSQL_DATABASE=carsdb
