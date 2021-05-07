@@ -10,7 +10,7 @@ services:
       - MYSQL_DATABASE=carsdb
       - MYSQL_USER=root
     volumes:
-      - ~/backend_data:/public/product-img
+      - ~/backend_data:/product-img
 
 networks:
   default:
